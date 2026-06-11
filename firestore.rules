@@ -1,0 +1,62 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function getProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isMaster() {
+      return isSignedIn() && getProfile().role == 'MASTER';
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (getProfile().role == 'ADMIN' || getProfile().role == 'MASTER');
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Links: Anyone signed in can read. Admin/Master can write anything.
+    // Any authenticated user can write to Bancos or Utilitários.
+    match /links/{linkId} {
+      allow read: if isSignedIn();
+      allow create: if isAdmin() || (isSignedIn() && request.resource.data.category in ['Bancos', 'Utilitários']);
+      allow update: if isAdmin() || (isSignedIn() && request.resource.data.category in ['Bancos', 'Utilitários'] && resource.data.category in ['Bancos', 'Utilitários']);
+      allow delete: if isAdmin() || (isSignedIn() && resource.data.category in ['Bancos', 'Utilitários']);
+    }
+
+    // Vault: Anyone signed in can read and write (verification is handled in UI).
+    match /vault/{itemId} {
+      allow read, write: if isSignedIn();
+    }
+
+    // Config (Vault Settings): Anyone signed in can read to verify the password. Only Master can write.
+    match /config/vault {
+      allow read: if isSignedIn();
+      allow write: if isMaster();
+    }
+
+    // Users: 
+    // - Everyone can read their own profile.
+    // - Admin/Master can read/write everything.
+    // - Users can query exactly their own email to look up placeholders.
+    match /users/{userId} {
+      allow get: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow list: if isSignedIn() && (resource.data.email == request.auth.token.email || isAdmin());
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update: if isSignedIn() && (request.auth.uid == userId || isMaster());
+      allow delete: if isMaster() && request.auth.uid != userId;
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

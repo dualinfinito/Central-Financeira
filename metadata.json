@@ -1,0 +1,6 @@
+{
+  "name": "Central Financeira Integrada",
+  "description": "Modern financial operations dashboard for centralizing links, utility tools, and secure vault storage.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

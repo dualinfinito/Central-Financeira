@@ -1,0 +1,58 @@
+{
+  "entities": {
+    "Link": {
+      "title": "Dashboard Link",
+      "description": "A link to a financial tool or resource",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string", "description": "Display name of the link" },
+        "description": { "type": "string", "description": "Short description of the resource" },
+        "url": { "type": "string", "description": "The target URL" },
+        "category": { "type": "string", "enum": ["Bancos", "Utilitários", "Apps IA"], "description": "Organizational category" },
+        "logoUrl": { "type": "string", "description": "URL or path to the logo image" },
+        "isFavorite": { "type": "boolean", "description": "Whether the link is pinned to favorites" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "lastAccessedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "url", "category"]
+    },
+    "VaultItem": {
+      "title": "Vault Entry",
+      "description": "Secure storage for usernames and passwords",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "username": { "type": "string" },
+        "password": { "type": "string" },
+        "url": { "type": "string" },
+        "description": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "username", "password"]
+    },
+    "User": {
+      "title": "User Profile",
+      "description": "Information about the user and their permissions",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "isAdmin": { "type": "boolean" },
+        "displayName": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/links/{linkId}": {
+      "schema": "Link",
+      "description": "All public/shared links in the hub"
+    },
+    "/vault/{itemId}": {
+      "schema": "VaultItem",
+      "description": "Secure items accessible only to admins"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User profile and permissions"
+    }
+  }
+}

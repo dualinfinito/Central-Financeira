@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  --color-background: hsl(220 14% 96%);
+  --color-foreground: hsl(222 20% 20%);
+  --color-card: hsl(0 0% 100%);
+  --color-card-foreground: hsl(222 20% 20%);
+  --color-popover: hsl(0 0% 100%);
+  --color-popover-foreground: hsl(222 20% 20%);
+  --color-primary: hsl(142 71% 45%);
+  --color-primary-foreground: #ffffff;
+  --color-secondary: hsl(220 13% 94%);
+  --color-secondary-foreground: hsl(222 20% 20%);
+  --color-muted: hsl(220 13% 94%);
+  --color-muted-foreground: hsl(215 16% 47%);
+  --color-accent: hsl(142 71% 45%);
+  --color-accent-foreground: #ffffff;
+  --color-destructive: hsl(0 72% 51%);
+  --color-destructive-foreground: #ffffff;
+  --color-border: hsl(220 13% 91%);
+  --color-input: hsl(220 13% 91%);
+  --color-ring: hsl(142 71% 45%);
+
+  --color-sidebar: hsl(222 47% 10%);
+  --color-sidebar-hover: hsl(217 33% 16%);
+
+  --radius: 0.75rem;
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+
+  @keyframes shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(200%);
+    }
+  }
+}
+
+@layer utilities {
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    @apply antialiased;
+  }
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+}
+
+.glow-primary {
+  box-shadow: 0 0 20px rgba(22, 163, 74, 0.15);
+}
+
+.bento-card {
+  @apply bg-card border border-border/80 rounded-2xl transition-all duration-500 relative overflow-hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 8px 16px rgba(0, 0, 0, 0.02);
+  background: var(--color-card);
+}
+
+.bento-card:hover {
+  @apply border-primary/30;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04), 0 0 20px rgba(74, 222, 128, 0.04);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-black/10 rounded-full;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  @apply bg-black/20;
+}
